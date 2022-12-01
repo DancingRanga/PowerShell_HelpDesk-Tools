@@ -1,0 +1,29 @@
+Function Printer_Info{
+    $Asset = read-host -prompt "Input PC Name: ";
+
+    ######################
+    # Get Networked Printers
+    ######################
+    $P = Invoke-Command -ComputerName $Asset -ScriptBlock {Get-ChildItem "Registry::\HKEY_USERS\*1860823000*\Printers\Connections\*" | Select-Object -Property PSChildName | Where-Object {$_.PSChildName -like "*addSearchParam*"}} | Select-Object -ExpandProperty PSChildName
+
+    ######################
+    # Get Installed Printers
+    ######################
+    $C = Invoke-Command -ComputerName $Asset -ScriptBlock { Get-Printer | fl Name }
+
+    # Outputs:
+      #  Name : OneNote (Desktop)
+
+      #  Name : Microsoft Print to PDF
+
+      #  Name : Fax
+
+      #  Name : HP Printer Name
+
+    Write-Output $C "Printers" $P `r`
+
+}
+
+   Printer_Info 
+        
+(Read-Host -Prompt "Press enter to Exit")
